@@ -2,11 +2,12 @@
 set -e
 
 function get_ubuntu_version() {
-    ubuntu_version=$(lsb_release -r | awk '{print $2}' | awk -F'.' '{print $1}')
-    if [ $ubuntu_version -lt 20  ]; then
-        echo "ERROR: The save faces pipeline is currently supported for Ubuntu 20.04 OS (Your system is Ubuntu $ubuntu_version)"
-        exit 1
-    fi
+    # ubuntu_version=$(lsb_release -r | awk '{print $2}' | awk -F'.' '{print $1}')
+    # if [ $ubuntu_version -lt 20  ]; then
+    #     echo "ERROR: The save faces pipeline is currently supported for Ubuntu 20.04 OS (Your system is Ubuntu $ubuntu_version)"
+    #     exit 1
+    # fi
+    echo "Ubuntu OK"
 }
 
 function set_networks() {

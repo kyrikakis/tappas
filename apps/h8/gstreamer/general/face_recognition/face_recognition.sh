@@ -144,6 +144,10 @@ function main() {
         source_element="v4l2src device=$input_source name=src_0 ! video/x-raw,format=YUY2,width=1920,height=1080,framerate=30/1 ! \
                         queue  max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
                         videoflip video-direction=horiz"
+    elif [[ $input_source =~ "rpi" ]]; then
+        source_element="libcamerasrc ! video/x-raw,format=YUY2,width=1024,height=576,framerate=15/1 ! \
+                        queue  max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
+                        videoflip video-direction=horiz"
     else
         source_element="filesrc location=$input_source name=src_0 ! decodebin"
     fi
@@ -202,7 +206,7 @@ function main() {
         queue name=hailo_post_draw leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
         videoconvert n-threads=4 qos=false name=display_videoconvert qos=false ! \
         queue name=hailo_display_q_0 leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
-        fpsdisplaysink video-sink=$video_sink_element name=hailo_display sync=false text-overlay=false \
+        jpegenc ! tcpserversink host=192.168.1.172 \
         ${additional_parameters}"
 
     echo ${pipeline}

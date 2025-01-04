@@ -5,11 +5,7 @@ from pathlib import Path
 from setuptools import setup, find_packages
 
 # Complicated line to extract RELEASE 20.04/21.04/22.04
-lsb_release = list(filter(lambda x: 'RELEASE' in x,
-                          Path('/etc/lsb-release').read_text().split('\n')))[0].split('=')[1].replace('.', '_')
-
-required = Path(f'requirements_{lsb_release}.txt').read_text().splitlines()
-
+required = Path(f'requirements_20_04.txt').read_text().splitlines()
 
 def get_tappas_release_version():
     tappas_repository_root = os.path.realpath(os.path.join(os.path.dirname(__file__), '../..'))
