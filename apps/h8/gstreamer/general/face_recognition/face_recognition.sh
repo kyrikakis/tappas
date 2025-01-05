@@ -139,6 +139,10 @@ function main() {
     parse_args $@
     set_networks $@
 
+    while ! ifconfig | grep -F "192.168.1." > /dev/null; do 
+        sleep 1
+    done
+
     # If the video provided is from a camera
     if [[ $input_source =~ "/dev/video" ]]; then
         source_element="v4l2src device=$input_source name=src_0 ! video/x-raw,format=YUY2,width=1920,height=1080,framerate=30/1 ! \
@@ -146,8 +150,7 @@ function main() {
                         videoflip video-direction=horiz"
     elif [[ $input_source =~ "rpi" ]]; then
         source_element="libcamerasrc ! video/x-raw,format=YUY2,width=1024,height=576,framerate=15/1 ! \
-                        queue  max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
-                        videoflip video-direction=horiz"
+                        queue  max-size-buffers=30 max-size-bytes=0 max-size-time=0"
     else
         source_element="filesrc location=$input_source name=src_0 ! decodebin"
     fi
