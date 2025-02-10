@@ -1,15 +1,20 @@
 #!/bin/bash
 export ROS_DOMAIN_ID=20
+export HAILO_MONITOR=1
 source /opt/ros/jazzy/setup.bash
 source /home/pi/colcon_ws/install/setup.bash
 source /home/pi/tappas/scripts/misc/checks_before_run.sh
 
 export GSCAM_CONFIG="gst-launch-1.0 libcamerasrc ! video/x-raw,format=YUY2,width=1024,height=576,framerate=15/1 ! \
 queue max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
-queue name=hailo_pre_convert_0 leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! videoconvert n-threads=2 qos=false ! \
+queue name=hailo_pre_convert_0 leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! videoconvert n-threads=4 qos=false ! \
 queue name=pre_detector_q leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
 tee name=t hailomuxer name=hmux t. ! queue name=detector_bypass_q leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
-hmux. t. ! videoscale name=face_videoscale method=0 n-threads=2 add-borders=false qos=false ! video/x-raw, pixel-aspect-ratio=1/1 ! \
+hmux. t. ! videoscale name=face_videoscale method=0 n-threads=4 add-borders=false qos=false ! video/x-raw, pixel-aspect-ratio=1/1 ! \
+queue leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
+hailonet hef-path=/home/pi/tappas/apps/h8/gstreamer/general/detection/resources/yolov8m.hef batch-size=1 nms-score-threshold=0.3 nms-iou-threshold=0.45 output-format-type=HAILO_FORMAT_TYPE_FLOAT32 scheduling-algorithm=1 vdevice-key=1 ! \
+queue leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
+hailofilter function-name=yolov8m so-path=/home/pi/tappas/apps/h8/gstreamer/libs/post_processes//libyolo_hailortpp_post.so config-path=null qos=false ! \
 queue name=pre_face_detector_infer_q leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
 hailonet hef-path=/home/pi/tappas/apps/h8/gstreamer/general/face_recognition/resources/scrfd_10g.hef scheduling-algorithm=1 vdevice-key=1 ! \
 queue name=detector_post_q leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
