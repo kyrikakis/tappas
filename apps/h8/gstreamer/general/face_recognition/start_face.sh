@@ -34,7 +34,7 @@ queue name=recognition_pre_agg_q leaky=no max-size-buffers=30 max-size-bytes=0 m
 queue name=hailo_pre_gallery_q leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
 hailogallery gallery-file-path=/home/pi/tappas/apps/h8/gstreamer/general/face_recognition/resources/gallery/face_recognition_local_gallery_rgba.json load-local-gallery=true similarity-thr=.4 gallery-queue-size=20 class-id=-1 ! \
 queue name=hailo_pre_draw2 leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
-hailooverlay name=hailo_overlay qos=false show-confidence=false local-gallery=true line-thickness=5 font-thickness=2 landmark-point-radius=8 ! \
+hailooverlay name=hailo_overlay qos=false show-confidence=false line-thickness=5 font-thickness=2 landmark-point-radius=8 ! \
 queue name=hailo_post_draw leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
 videoconvert n-threads=4 qos=false name=display_videoconvert qos=false ! \
 queue name=hailo_display_q_0 leaky=no max-size-buffers=30 max-size-bytes=0 max-size-time=0 ! \
